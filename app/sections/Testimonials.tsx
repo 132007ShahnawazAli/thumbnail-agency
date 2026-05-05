@@ -27,7 +27,13 @@ const testimonialsData = [
   }
 ];
 
-function TestimonialCard({ t, isActive, position, onNext, onPrev }) {
+function TestimonialCard({ t, isActive, position, onNext, onPrev }: {
+  t: { name: string; subs: string; text: string; tags: string[]; avatar: string };
+  isActive: boolean;
+  position: string;
+  onNext: () => void;
+  onPrev: () => void;
+}) {
   // We determine the horizontal offset based on the position state
   const getPositionStyles = () => {
     if (isActive) return 'translate-x-0 opacity-100 scale-100 z-20';
