@@ -2,14 +2,18 @@
 import React, { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { TrophyIcon } from '../components/icons';
+
+gsap.registerPlugin(ScrollTrigger);
 
 function Clients() {
   const container = useRef(null);
 
   useGSAP(() => {
-    // Header reveal
-    gsap.fromTo(".clients-header > *", 
-      { y: 30, opacity: 0 },
+    // Header reveal - Gentle fade up
+    gsap.fromTo(".clients-header > *",
+      { y: 20, opacity: 0 },
       {
         scrollTrigger: {
           trigger: ".clients-header",
@@ -18,49 +22,63 @@ function Clients() {
         },
         y: 0,
         opacity: 1,
-        stagger: 0.1,
-        duration: 0.7,
+        stagger: 0.15,
+        duration: 1.2,
         ease: "power3.out"
       }
     );
 
-    // Creator cards reveal
-    gsap.fromTo(".creator-card", 
-      { scale: 0.9, opacity: 0 },
-      {
-        scrollTrigger: {
-          trigger: ".creator-grid",
-          start: "top 80%",
-          toggleActions: "play none none none"
-        },
-        scale: 1,
-        opacity: 1,
-        stagger: 0.05,
-        duration: 0.8,
-        ease: "power3.out"
+    // Cards reveal progressively with stable row staggering
+    gsap.set(".creator-card", { y: 40, opacity: 0 });
+    ScrollTrigger.batch(".creator-card", {
+      start: "top 85%",
+      onEnter: (elements) => {
+        gsap.to(elements, {
+          y: 0,
+          opacity: 1,
+          stagger: 0.15,
+          duration: 0.8,
+          ease: "power3.out",
+          overwrite: true
+        });
       }
-    );
+    });
 
-    // Subscriber count-up animation
+    // Subscriber count-up animation - Smoother and slightly longer
     gsap.utils.toArray(".client-subs-count").forEach((el: any) => {
-      const target = parseFloat(el.getAttribute("data-target") || "0");
-      gsap.from(el, {
-        textContent: 0,
-        duration: 0.8,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: el,
-          start: "top 90%",
-          toggleActions: "play none none none"
-        },
-        onUpdate: function() {
-          const progress = this.progress();
-          const currentVal = (progress * target).toFixed(2);
-          el.textContent = currentVal;
+      const targetStr = el.getAttribute("data-target") || "0";
+      const target = parseFloat(targetStr);
+      const decimals = targetStr.includes('.') ? targetStr.split('.')[1].length : 0;
+      
+      gsap.fromTo(el,
+        { textContent: 0 },
+        {
+          textContent: target,
+          duration: 1.5,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: el,
+            start: "top 90%",
+            toggleActions: "play none none none"
+          },
+          modifiers: {
+            textContent: value => parseFloat(value).toFixed(decimals)
+          }
         }
-      });
+      );
     });
   }, { scope: container });
+
+  const creators = [
+    { name: "Mark Tilbury", subs: "8.09", img: "/Creators/Mark Tilbury.png" },
+    { name: "Faze Rug", subs: "28.9", img: "/Creators/Faze Rug.png" },
+    { name: "MrBeast", subs: "476", img: "/Creators/Mr Beast.png" },
+    { name: "Leila Hormozi", subs: "1.54", img: "/Creators/Leila Hormozi.png" },
+    { name: "Sten Ekberg", subs: "5.33", img: "/Creators/Sten Ekberg.png" },
+    { name: "Cleo Abram", subs: "7.66", img: "/Creators/Cleo Abram.png" },
+    { name: "Noah Kagan", subs: "1.18", img: "/Creators/Noah Kagan.png" },
+    { name: "Alex Costa", subs: "4.14", img: "/Creators/Alex Costa.png" }
+  ];
 
   return (
     <section ref={container} className="w-full bg-[#f7f8f9] py-24 px-4 flex flex-col items-center justify-center gap-16">
@@ -68,10 +86,7 @@ function Clients() {
       <div className="clients-header flex flex-col gap-6 w-fit items-center ">
         {/* Badge */}
         <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full border border-gray-100">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" className="text-[#042449]" xmlns="http://www.w3.org/2000/svg">
-            <path d="M19 5H21V11C21 12.6569 19.6569 14 18 14H17.414L15.414 16H13V19H17V21H7V19H11V16H8.58597L6.58597 14H6C4.34315 14 3 12.6569 3 11V5H5V11C5 11.5523 5.44772 12 6 12H7H17H18C18.5523 12 19 11.5523 19 11V5ZM17 5V10H7V5H17Z"></path>
-            <path d="M17 3H7C5.89543 3 5 3.89543 5 5V10C5 11.1046 5.89543 12 7 12H8.58597L10.586 14H13.414L15.414 12H17C18.1046 12 19 11.1046 19 10V5C19 3.89543 18.1046 3 17 3Z" fill="currentColor" />
-          </svg>
+          <TrophyIcon size={14} className="text-[#042449]/80" />
           <span className="text-[#042449] font-semibold text-sm">Our Clients</span>
         </div>
 
@@ -87,8 +102,7 @@ function Clients() {
       </div>
       {/* Thumbnail Grid */}
       <div className="creator-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-full md:max-w-[calc(100vw-8rem)] lg:max-w-[calc(100vw-18rem)] px-4 md:px-0">
-        {/* We create 8 placeholders as shown in the design */}
-        {Array.from({ length: 8 }).map((_, i) => (
+        {creators.map((creator, i) => (
           <div
             key={i}
             className="creator-card relative overflow-hidden w-full aspect-[4/4.8] rounded-2xl bg-[radial-gradient(circle_at_top,#1B85FF_0%,#389FFF_24%,#001833_100%)] shadow-lg"
@@ -106,8 +120,8 @@ function Clients() {
               </defs>
             </svg>
             <img
-              src="Mark_Tibury.png"
-              alt="Mark Tilbury"
+              src={creator.img}
+              alt={creator.name}
               className='absolute top-0 left-0 w-full h-full object-cover'
               style={{
                 maskImage: "url('/creatormask.svg')",
@@ -123,9 +137,9 @@ function Clients() {
 
             {/* Creator Info */}
             <div className="absolute bottom-6 left-0 w-full flex flex-col items-center justify-center gap-1 px-4">
-              <h3 className="text-[#F1F2F4] text-3xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight text-center leading-tight">Mark Tilbury</h3>
+              <h3 className="text-[#F1F2F4] text-3xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight text-center leading-tight">{creator.name}</h3>
               <p className="text-sm sm:text-xs md:text-sm font-semibold tracking-wide uppercase bg-[radial-gradient(ellipse_at_center,#C4D4D9_0%,#45BAFD_100%)] mix-blend-plus-lighter bg-clip-text text-transparent text-center leading-tight">
-                <span className="client-subs-count" data-target="8.09">8.09</span>M Subscribers
+                <span className="client-subs-count" data-target={creator.subs}>{creator.subs}</span>M Subscribers
               </p>
             </div>
           </div>

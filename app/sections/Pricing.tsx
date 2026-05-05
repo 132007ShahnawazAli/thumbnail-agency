@@ -3,6 +3,7 @@ import React, { useRef } from 'react';
 import PrimaryButton from '../components/PrimaryButton';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
+import { MoneyBagIcon } from '../components/icons';
 
 const pricingPlans = [
   {
@@ -64,7 +65,7 @@ export default function Pricing() {
 
   useGSAP(() => {
     // Header reveal
-    gsap.fromTo(".pricing-header > *", 
+    gsap.fromTo(".pricing-header > *",
       { y: 30, opacity: 0 },
       {
         scrollTrigger: {
@@ -81,12 +82,12 @@ export default function Pricing() {
     );
 
     // Cards reveal
-    gsap.fromTo(".pricing-card", 
+    gsap.fromTo(".pricing-card",
       { y: 40, opacity: 0 },
       {
         scrollTrigger: {
           trigger: container.current,
-          start: "top 75%",
+          start: "top 50%",
           toggleActions: "play none none none"
         },
         y: 0,
@@ -106,11 +107,7 @@ export default function Pricing() {
         <div className="pricing-header flex flex-col gap-6 w-full items-center text-center">
           {/* Badge */}
           <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border border-gray-100 w-fit">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-[#042449]">
-              <circle cx="12" cy="12" r="10" />
-              <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8" />
-              <path d="M12 18V6" />
-            </svg>
+            <MoneyBagIcon size={14} className="text-[#042449]/80" />
             <span className="text-[#042449] font-semibold text-sm ">Pricing</span>
           </div>
 
@@ -129,7 +126,7 @@ export default function Pricing() {
           {pricingPlans.map((plan, index) => (
             <div
               key={index}
-              className={`pricing-card relative flex flex-col w-full max-w-[380px] rounded-[2rem] transition-all duration-300 hover:shadow-xl ${plan.popular
+              className={`pricing-card relative flex flex-col w-full max-w-[380px] rounded-4xl transition-all duration-300 hover:shadow-xl ${plan.popular
                 ? 'bg-[linear-gradient(to_bottom,#7ED0FF_0%,#FFFFFF_81%)] px-1.5 xl:-translate-y-5 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.1)] z-10'
                 : 'bg-white p-8 xl:p-10 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] xl:mt-4 z-0 border border-transparent'
                 }`}
@@ -140,7 +137,7 @@ export default function Pricing() {
                 </div>
               )}
 
-              <div className={`${plan.popular ? 'bg-white rounded-[1.6rem] p-6 sm:p-8 flex flex-col flex-grow' : 'flex flex-col flex-grow'}`}>
+              <div className={`${plan.popular ? 'bg-white rounded-[1.6rem] p-6 sm:p-8 flex flex-col grow' : 'flex flex-col grow'}`}>
                 <div className={`flex flex-col gap-1 text-left`}>
                   <h3 className="text-[#042449] text-xl font-semibold ">{plan.name}</h3>
                   <p className="text-[#042449]/60 text-sm font-medium ">{plan.description}</p>
@@ -150,7 +147,7 @@ export default function Pricing() {
                   <span className="text-[#042449] text-4xl leading-none font-semibold">{plan.price}</span>
                 </div>
 
-                <ul className="flex flex-col gap-4 text-left flex-grow mb-10">
+                <ul className="flex flex-col gap-4 text-left grow mb-10">
                   {plan.features.map((feature, i) => (
                     <li key={i} className="flex items-start gap-3">
                       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">

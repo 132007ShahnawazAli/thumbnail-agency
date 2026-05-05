@@ -3,6 +3,7 @@ import React, { useRef } from 'react';
 import PrimaryButton from '../components/PrimaryButton';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
+import { VideoCallIcon } from '../components/icons';
 
 export default function Cta() {
   const container = useRef(null);
@@ -22,20 +23,28 @@ export default function Cta() {
       ease: "power3.out"
     });
 
-    // Floating background grid
-    gsap.to(gridRef.current, {
-      y: "-=20",
-      x: "+=10",
-      duration: 5,
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut"
+    // Parallax effect on scroll for thumbnail columns
+    const cols = gsap.utils.toArray('.cta-thumbnail-col');
+    cols.forEach((col: any, index: number) => {
+      gsap.fromTo(col,
+        { y: index % 2 === 0 ? "10%" : "-10%" },
+        {
+          y: index % 2 === 0 ? "-20%" : "20%",
+          scrollTrigger: {
+            trigger: container.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1,
+          },
+          ease: "none"
+        }
+      );
     });
   }, { scope: container });
 
   return (
     <section ref={container} className="w-full bg-[#f7f8f9] py-16 md:py-24 px-4 flex justify-center overflow-hidden">
-      <div className="relative w-full max-w-full md:max-w-[calc(100vw-8rem)] lg:max-w-[calc(100vw-18rem)] bg-[#042449] rounded-[2rem] md:rounded-[2.5rem] overflow-hidden flex flex-col md:flex-row items-center justify-between shadow-[0_20px_60px_-15px_rgba(3,21,42,0.4)]">
+      <div className="relative w-full max-w-full md:max-w-[calc(100vw-8rem)] lg:max-w-[calc(100vw-18rem)] bg-[#042449] rounded-[2rem] md:rounded-[2.5rem] overflow-hidden flex flex-col md:flex-row items-center justify-between shadow-[0_20px_60px_-15px_rgba(3,21,42,0.4)] min-h-[450px] md:min-h-[550px]">
 
         {/* Background Overlay - Right Side Thumbnails Collage */}
         <div className="absolute inset-0 z-0 flex items-center justify-end overflow-hidden pointer-events-none">
@@ -45,7 +54,7 @@ export default function Cta() {
 
           {/* Thumbnails Mask Wrapper */}
           <div
-            className="absolute right-[-40%] md:right-[-25%] top-[20%] md:top-[-20%] w-[180%] md:w-[140%] h-[140%] z-0"
+            className="absolute right-[-30%] md:right-[-10%] top-[20%] md:top-[-10%] w-[160%] md:w-[125%] h-[130%] z-0"
             style={{
               maskImage: "url('/ctamask.svg')",
               maskSize: '100% 100%',
@@ -58,23 +67,28 @@ export default function Cta() {
             }}
           >
             {/* Thumbnails Grid Tilted */}
-            <div ref={gridRef} className="absolute right-[0%] top-[-30%] w-[90%] h-[160%] grid grid-cols-6 gap-2 md:gap-3 opacity-100 transform -rotate-[15deg] scale-110">
-              {Array.from({ length: 72 }).map((_, i) => (
-                <img
-                  key={i}
-                  src="/thumbnail.png"
-                  alt="thumbnail"
-                  className="w-full aspect-video object-cover rounded-xl shadow-lg border border-white/5"
-                />
+            <div ref={gridRef} className="absolute right-[0%] top-[-30%] w-[70%] md:w-[60%] h-[160%] flex gap-2 md:gap-3 opacity-100 transform -rotate-[15deg] scale-[1.15]">
+              {Array.from({ length: 3 }).map((_, colIndex) => (
+                <div key={colIndex} className="cta-thumbnail-col flex-1 flex flex-col gap-2 md:gap-3">
+                  {Array.from({ length: 24 }).map((_, i) => {
+                    const offset = colIndex * 7;
+                    const imgIndex = (i + offset) % 20;
+                    const src = `/thumbnails/thumbnail-${(imgIndex + 1).toString().padStart(2, '0')}.png`;
+                    return (
+                      <img
+                        key={i}
+                        src={src}
+                        alt="thumbnail"
+                        className="w-full aspect-video object-cover rounded-xl shadow-lg border border-white/5"
+                      />
+                    );
+                  })}
+                </div>
               ))}
             </div>
           </div>
         </div>
 
-        {/* Big White Logo Overlay */}
-        <div className="absolute right-[-5%] sm:right-[5%] md:right-[15%] top-[80%] md:top-1/2 -translate-y-1/2 z-20 pointer-events-none drop-shadow-[0_20px_30px_rgba(0,0,0,0.5)] opacity-[0.08] md:opacity-[0.15]">
-          <img src="/logo.svg" className="brightness-0 invert w-40 md:w-[180px]" alt="logo" />
-        </div>
 
         {/* Left Side - Content */}
         <div className="cta-content relative z-30 w-full md:w-[65%] p-8 sm:p-14 md:p-20 flex flex-col gap-8 md:gap-10 text-left min-h-[400px] md:min-h-0 justify-start md:justify-center">
@@ -88,11 +102,9 @@ export default function Cta() {
             </p>
           </div>
 
-          <PrimaryButton className="w-full sm:w-fit px-8 py-4 md:py-3.5 text-[16px] md:text-[15px] justify-center mt-2 md:mt-0">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mt-[-1px]">
-              <polygon points="23 7 16 12 23 17 23 7"></polygon>
-              <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
-            </svg>
+          <PrimaryButton className="w-full sm:w-fit px-20 py-4 md:py-3.5 text-[16px] md:text-[15px] justify-center mt-2 md:mt-0">
+            <VideoCallIcon size={16} />
+
             Book a Call
           </PrimaryButton>
         </div>

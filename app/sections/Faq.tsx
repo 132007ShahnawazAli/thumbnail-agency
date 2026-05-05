@@ -2,6 +2,7 @@
 import React, { useState, useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
+import { BubbleChatIcon } from '../components/icons';
 
 const faqs = [
   {
@@ -74,9 +75,7 @@ export default function Faq() {
         <div className="faq-left w-full md:w-5/12 flex flex-col gap-6 md:sticky md:top-32">
           {/* Badge */}
           <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border border-gray-100 w-fit">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" className="text-[#042449]">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v17zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z" />
-            </svg>
+            <BubbleChatIcon size={14} className="text-[#042449]/80" />
             <span className="text-[#042449] font-semibold text-sm tracking-tight">Faq</span>
           </div>
 

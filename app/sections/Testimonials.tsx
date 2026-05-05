@@ -1,70 +1,97 @@
-"use client";
-import React, { useRef, useState } from 'react';
+"use client"
+import React, { useState, useRef, useCallback, useEffect } from 'react';
+import useEmblaCarousel from 'embla-carousel-react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
+import { MedalIcon } from '../components/icons';
 
 const testimonialsData = [
   {
-    name: "Eric Janici",
-    subs: "573K Subscribers",
-    text: "They didn't just make it prettier. They told me exactly why my face placement was killing my CTR, rewrote my visual hierarchy, and delivered in 48 hours. Numbers don't lie.",
-    tags: ["Fitness", "Phycology"],
-    avatar: "/Mark_Tibury.png"
+    name: "Mark Tilbury",
+    handle: "@marktilbury",
+    avatar: "/Creators/Mark Tilbury.png",
+    text: "Working with ClickLab was the best investment for my channel. They know exactly how to craft a thumbnail that tells a story and pulls the viewer in instantly. The CTR jump was massive.",
+    tags: ["Storytelling", "CTR Boost"],
+    subs: "8.09M Subs"
   },
   {
-    name: "Sarah Jenkins",
-    subs: "1.2M Subscribers",
-    text: "I thought good thumbnails were about looking nice. These guys showed me it's about psychology. My last video hit 800K views. First time ever.",
-    tags: ["Fitness", "Lifestyle"],
-    avatar: "/Mark_Tibury.png"
+    name: "Faze Rug",
+    handle: "@fazerug",
+    avatar: "/Creators/Faze Rug.png",
+    text: "These guys are insane! They perfectly capture the crazy energy of my videos in a single image. My click-through rates have never been higher. Literally game-changing!",
+    tags: ["Viral Energy", "High CTR"],
+    subs: "28.9M Subs"
   },
   {
-    name: "Daniel Oliver",
-    subs: "45K Subscribers",
-    text: "I was ready to quit. Three years of uploading, going nowhere. Two weeks after working with them, my video got recommended for the first time. I cried.",
-    tags: ["Comedy", "Entertainment"],
-    avatar: "/Mark_Tibury.png"
+    name: "MrBeast",
+    handle: "@mrbeast",
+    avatar: "/Creators/Mr Beast.png",
+    text: "If you want to go viral, you need perfect thumbnails. ClickLab understands the psychology of clicking better than anyone I've worked with. Fast, reliable, and they always deliver bangers.",
+    tags: ["Viral Hooks", "Attention"],
+    subs: "476M Subs"
+  },
+  {
+    name: "Leila Hormozi",
+    handle: "@leilahormozi",
+    avatar: "/Creators/Leila Hormozi.png",
+    text: "As a CEO, I look for ROI and speed. ClickLab delivers both. Their thumbnails are clean, highly professional, and they consistently drive high-quality viewers to my business content.",
+    tags: ["ROI", "Professional"],
+    subs: "1.54M Subs"
+  },
+  {
+    name: "Sten Ekberg",
+    handle: "@drekberg",
+    avatar: "/Creators/Sten Ekberg.png",
+    text: "Translating complex health topics into clickable thumbnails is difficult, but they make it look easy. They found the perfect balance between curiosity and educational value.",
+    tags: ["Education", "Curiosity"],
+    subs: "5.33M Subs"
+  },
+  {
+    name: "Cleo Abram",
+    handle: "@cleoabram",
+    avatar: "/Creators/Cleo Abram.png",
+    text: "I love how they design! They managed to keep my thumbnails aesthetic and bright while drastically improving the performance. They really get the vibe I'm going for.",
+    tags: ["Aesthetic", "Performance"],
+    subs: "7.66M Subs"
+  },
+  {
+    name: "Noah Kagan",
+    handle: "@noahkagan",
+    avatar: "/Creators/Noah Kagan.png",
+    text: "These guys are absolute marketing wizards. They don't just make pretty pictures; they make thumbnails that mathematically increase your views. An absolute no-brainer for any serious creator.",
+    tags: ["Marketing", "Growth"],
+    subs: "1.18M Subs"
+  },
+  {
+    name: "Alex Costa",
+    handle: "@alexcosta",
+    avatar: "/Creators/Alex Costa.png",
+    text: "The visual quality is just next level. They matched the premium aesthetic of my brand perfectly while still optimizing for the algorithm. The results speak for themselves.",
+    tags: ["Premium", "Brand"],
+    subs: "4.14M Subs"
   }
 ];
 
-function TestimonialCard({ t, isActive, position, onNext, onPrev }: {
-  t: { name: string; subs: string; text: string; tags: string[]; avatar: string };
+function TestimonialCard({ t, isActive }: {
+  t: typeof testimonialsData[0];
   isActive: boolean;
-  position: string;
-  onNext: () => void;
-  onPrev: () => void;
 }) {
-  // We determine the horizontal offset based on the position state
-  const getPositionStyles = () => {
-    if (isActive) return 'translate-x-0 opacity-100 scale-100 z-20';
-    if (position === 'left') return '-translate-x-[70%] md:-translate-x-[110%] opacity-35 scale-90 z-10 cursor-pointer';
-    if (position === 'right') return 'translate-x-[70%] md:translate-x-[110%] opacity-35 scale-90 z-10 cursor-pointer';
-    return 'opacity-0 scale-75 z-0 pointer-events-none';
-  };
-
   return (
-    <div
-      onClick={() => { if (!isActive) position === 'left' ? onPrev() : onNext() }}
-      className={`
-        absolute flex flex-col gap-8 bg-white rounded-3xl p-6 w-full max-w-[420px] shrink-0 transition-all duration-700 ease-in-out
-        ${getPositionStyles()}
-        ${isActive ? 'shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)]' : 'hidden md:flex'}
-      `}
-    >
+    <div className={`relative flex flex-col gap-8 bg-white rounded-3xl p-6 md:p-8 w-full h-full border border-gray-100 transition-all duration-500 ${isActive ? 'opacity-100 shadow-[0_8px_30px_rgb(0,0,0,0.08)]' : 'opacity-[0.35] shadow-none'}`}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <img src={t.avatar} className="w-12 h-12 rounded-full object-cover" alt={t.name} />
-          <div className="flex flex-col w-fit items-start">
-            <span className="text-[#042449]/90 font-semibold text-base">{t.name}</span>
+          <img src={t.avatar} className="w-12 h-12 rounded-full object-cover bg-sky-200" alt={t.name} />
+          <div className="flex flex-col">
+            <span className="text-[#042449] font-bold text-sm tracking-tight">{t.name}</span>
             <span className="text-[#042449]/60 text-xs font-semibold">{t.subs}</span>
           </div>
         </div>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="text-[#042449]/80">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="text-[#042449]/80">
           <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
         </svg>
       </div>
 
-      <p className="text-[#042449] text-left font-semibold text-base leading-tight flex-grow tracking-tighter">
+      <p className="text-[#042449] text-left font-semibold text-base leading-tight grow tracking-tighter">
         {t.text}
       </p>
 
@@ -75,41 +102,69 @@ function TestimonialCard({ t, isActive, position, onNext, onPrev }: {
           </span>
         ))}
       </div>
-
-      {isActive && (
-        <>
-          <button 
-            onClick={(e) => { e.stopPropagation(); onPrev(); }}
-            className="absolute -left-5 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-[#344054] text-white flex items-center justify-center shadow-lg hover:bg-[#1D2939] transition-colors z-40"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
-          </button>
-          <button 
-            onClick={(e) => { e.stopPropagation(); onNext(); }}
-            className="absolute -right-5 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-[#344054] text-white flex items-center justify-center shadow-lg hover:bg-[#1D2939] transition-colors z-40"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6" /></svg>
-          </button>
-        </>
-      )}
     </div>
   );
 }
 
 function Testimonials() {
   const container = useRef(null);
-  const [activeIndex, setActiveIndex] = useState(1);
 
-  const next = () => setActiveIndex((prev) => (prev + 1) % testimonialsData.length);
-  const prev = () => setActiveIndex((prev) => (prev - 1 + testimonialsData.length) % testimonialsData.length);
+  // Embla + AutoScroll plugin for infinite feel
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: true,
+    align: 'center',
+    skipSnaps: false,
+  });
+
+  const [centerIndex, setCenterIndex] = useState(0);
+
+  const scrollPrev = useCallback(() => {
+    if (emblaApi) emblaApi.scrollPrev();
+  }, [emblaApi]);
+
+  const scrollNext = useCallback(() => {
+    if (emblaApi) emblaApi.scrollNext();
+  }, [emblaApi]);
+
+  // Detect which slide is physically closest to the viewport center
+  const updateCenterSlide = useCallback(() => {
+    if (!emblaApi) return;
+    const rootRect = emblaApi.rootNode().getBoundingClientRect();
+    const viewportCenter = rootRect.left + rootRect.width / 2;
+    const slides = emblaApi.slideNodes();
+    let closest = 0;
+    let minDist = Infinity;
+    slides.forEach((slide, i) => {
+      const rect = slide.getBoundingClientRect();
+      const slideCenter = rect.left + rect.width / 2;
+      const dist = Math.abs(slideCenter - viewportCenter);
+      if (dist < minDist) {
+        minDist = dist;
+        closest = i;
+      }
+    });
+    setCenterIndex(closest);
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    emblaApi.on('scroll', updateCenterSlide);
+    emblaApi.on('settle', updateCenterSlide);
+    emblaApi.on('reInit', updateCenterSlide);
+    updateCenterSlide();
+    return () => {
+      emblaApi.off('scroll', updateCenterSlide);
+      emblaApi.off('settle', updateCenterSlide);
+      emblaApi.off('reInit', updateCenterSlide);
+    };
+  }, [emblaApi, updateCenterSlide]);
 
   useGSAP(() => {
-    // Entrance Animation for the header section
     gsap.from(".gsap-reveal", {
       y: 30,
       opacity: 0,
       stagger: 0.15,
-      duration: 0.8,
+      duration: 1.2,
       ease: "power3.out",
       scrollTrigger: {
         trigger: container.current,
@@ -119,15 +174,15 @@ function Testimonials() {
   }, { scope: container });
 
   return (
-    <section ref={container} className="w-full bg-[#f7f8f9] py-24 md:py-32 px-4 flex flex-col items-center justify-center overflow-hidden">
-      <div className="w-full max-w-full md:max-w-[calc(100vw-8rem)] lg:max-w-[calc(100vw-18rem)] px-4 md:px-0 flex flex-col gap-16 text-center items-center">
+    <section ref={container} className="w-full bg-[#f7f8f9] py-24 md:py-32 flex flex-col items-center justify-center overflow-hidden">
+      <div className="w-full max-w-7xl mx-auto flex flex-col gap-16 md:gap-20 items-center px-4 md:px-8">
         <style>{`
             @media (min-width: 768px) {
                 .testimonial-mask {
                     mask-image: url('/testimonialmask.svg');
                     -webkit-mask-image: url('/testimonialmask.svg');
-                    mask-size: 100% 100%;
-                    -webkit-mask-size: 100% 100%;
+                    mask-size: 140% 150%;
+                    -webkit-mask-size: 140% 150%;
                     mask-position: center;
                     -webkit-mask-position: center;
                     mask-repeat: no-repeat;
@@ -139,9 +194,7 @@ function Testimonials() {
         {/* Header */}
         <div className="flex flex-col gap-6 w-full items-center text-center">
           <div className="gsap-reveal flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border border-gray-100 w-fit">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" className="text-[#042449]">
-              <path d="M19 2H5C3.34315 2 2 3.34315 2 5V6C2 7.65685 3.34315 9 5 9H6.11054C6.54418 11.5307 8.35623 13.5855 10.9 14.2882V19H8V21H16V19H13.1V14.2882C15.6438 13.5855 17.4558 11.5307 17.8895 9H19C20.6569 9 22 7.65685 22 6V5C22 3.34315 20.6569 2 19 2ZM5 7C4.44772 7 4 6.55228 4 6V5C4 4.44772 4.44772 4 5 4H6V7H5ZM19 7H18V4H19C19.5523 4 20 4.44772 20 5V6C20 6.55228 19.5523 7 19 7Z" />
-            </svg>
+            <MedalIcon size={14} className="text-[#042449]/80" />
             <span className="text-[#042449] font-semibold text-sm tracking-tight">Testimonials</span>
           </div>
 
@@ -156,25 +209,43 @@ function Testimonials() {
           </div>
         </div>
 
-        {/* Carousel Logic Area */}
-        <div className="testimonial-mask relative flex w-full h-[480px] md:h-[400px] items-center justify-center py-8">
-          {testimonialsData.map((t, index) => {
-            let position = 'hidden';
-            if (index === activeIndex) position = 'center';
-            else if (index === (activeIndex - 1 + testimonialsData.length) % testimonialsData.length) position = 'left';
-            else if (index === (activeIndex + 1) % testimonialsData.length) position = 'right';
+        {/* Carousel Track */}
+        <div className="relative w-full flex items-center">
 
-            return (
-              <TestimonialCard
-                key={index}
-                t={t}
-                isActive={index === activeIndex}
-                position={position}
-                onNext={next}
-                onPrev={prev}
-              />
-            );
-          })}
+          <button
+            onClick={scrollPrev}
+            className="hidden md:flex absolute -left-4 lg:-left-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white text-[#042449] border border-gray-100 items-center justify-center shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:scale-105 hover:bg-gray-50 transition-all duration-300 z-40"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
+          </button>
+
+          <div className="overflow-visible w-full testimonial-mask" ref={emblaRef}>
+            <div className="flex">
+              {testimonialsData.map((t, index) => (
+                <div key={`${t.name}-${index}`} className="flex-[0_0_90%] min-w-0 md:flex-[0_0_31.5%] px-3 h-auto min-h-[320px]">
+                  <TestimonialCard t={t} isActive={index === centerIndex} />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <button
+            onClick={scrollNext}
+            className="hidden md:flex absolute -right-4 lg:-right-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white text-[#042449] border border-gray-100 items-center justify-center shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:scale-105 hover:bg-gray-50 transition-all duration-300 z-40"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+          </button>
+
+        </div>
+
+        {/* Mobile Navigation Controls */}
+        <div className="flex md:hidden items-center gap-4 mt-2">
+          <button onClick={scrollPrev} className="w-12 h-12 rounded-full bg-white text-[#042449] border border-gray-100 flex items-center justify-center shadow-sm active:bg-gray-50">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
+          </button>
+          <button onClick={scrollNext} className="w-12 h-12 rounded-full bg-white text-[#042449] border border-gray-100 flex items-center justify-center shadow-sm active:bg-gray-50">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+          </button>
         </div>
 
       </div>

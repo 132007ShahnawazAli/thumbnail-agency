@@ -1,16 +1,59 @@
-import React from 'react';
+"use client"
+import React, { useRef } from 'react';
 import Link from 'next/link';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Footer() {
+  const container = useRef(null);
+
+  useGSAP(() => {
+    // Animate columns fading and sliding up
+    gsap.fromTo(".footer-col",
+      { y: 30, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        stagger: 0.1,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: container.current,
+          start: "top 90%",
+          toggleActions: "play none none none"
+        }
+      }
+    );
+
+    // Animate the bottom copyright line
+    gsap.fromTo(".footer-bottom",
+      { opacity: 0 },
+      {
+        opacity: 1,
+        duration: 1.2,
+        delay: 0.4,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: container.current,
+          start: "top 90%",
+          toggleActions: "play none none none"
+        }
+      }
+    );
+  }, { scope: container });
+
   return (
-    <footer className="w-full bg-white pt-24 pb-8 px-4 flex justify-center border-t border-gray-100">
+    <footer ref={container} className="w-full bg-white pt-24 pb-8 px-4 flex justify-center border-t border-gray-100 overflow-hidden">
       <div className="w-full max-w-full md:max-w-[calc(100vw-8rem)] lg:max-w-[calc(100vw-18rem)] px-4 md:px-0 flex flex-col">
         
         {/* Top Section - Flex Layout */}
         <div className="flex flex-col lg:flex-row justify-between gap-12 lg:gap-8 mb-16">
           
           {/* Column 1: Brand & Socials */}
-          <div className="flex flex-col gap-6 w-full lg:w-[25%] pr-4">
+          <div className="footer-col flex flex-col gap-6 w-full lg:w-[25%] pr-4">
             {/* Logo */}
             <div className="flex items-center gap-2">
               <img src="/logo.svg" width={25} alt="logo" />
@@ -35,7 +78,7 @@ export default function Footer() {
           </div>
 
           {/* Column 2: Product */}
-          <div className="flex flex-col gap-6 lg:w-[15%]">
+          <div className="footer-col flex flex-col gap-6 lg:w-[15%]">
             <h4 className="text-[#042449] font-semibold text-[17px] tracking-tight">Product</h4>
             <ul className="flex flex-col gap-4 text-[15px] font-medium text-[#042449]/60">
               <li><Link href="#" className="hover:text-[#1C87FF] transition-colors">Features</Link></li>
@@ -47,7 +90,7 @@ export default function Footer() {
           </div>
 
           {/* Column 3: Company */}
-          <div className="flex flex-col gap-6 lg:w-[15%]">
+          <div className="footer-col flex flex-col gap-6 lg:w-[15%]">
             <h4 className="text-[#042449] font-semibold text-[17px] tracking-tight">Company</h4>
             <ul className="flex flex-col gap-4 text-[15px] font-medium text-[#042449]/60">
               <li><Link href="#" className="hover:text-[#1C87FF] transition-colors">About</Link></li>
@@ -59,7 +102,7 @@ export default function Footer() {
           </div>
 
           {/* Column 4: Support */}
-          <div className="flex flex-col gap-6 lg:w-[15%]">
+          <div className="footer-col flex flex-col gap-6 lg:w-[15%]">
             <h4 className="text-[#042449] font-semibold text-[17px] tracking-tight">Support</h4>
             <ul className="flex flex-col gap-4 text-[15px] font-medium text-[#042449]/60">
               <li><Link href="#" className="hover:text-[#1C87FF] transition-colors">Getting started</Link></li>
@@ -71,7 +114,7 @@ export default function Footer() {
           </div>
 
           {/* Column 5: Contact us */}
-          <div className="flex flex-col gap-6 lg:w-[25%]">
+          <div className="footer-col flex flex-col gap-6 lg:w-[25%]">
             <h4 className="text-[#042449] font-semibold text-[17px] tracking-tight">Contact us</h4>
             <ul className="flex flex-col gap-4 text-[15px] font-medium text-[#042449]/60">
               <li className="flex items-center gap-3">
@@ -92,7 +135,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom Section */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-8 border-t border-[#042449]/10 text-sm font-medium text-[#042449]/50">
+        <div className="footer-bottom flex flex-col md:flex-row items-center justify-between gap-4 pt-8 border-t border-[#042449]/10 text-sm font-medium text-[#042449]/50">
           <p>Copyright © 2026 ClickLabs</p>
           <div className="flex items-center text-center md:text-right gap-1.5 flex-wrap justify-center">
             <span>All Rights Reserved</span>

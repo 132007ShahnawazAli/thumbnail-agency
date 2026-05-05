@@ -5,13 +5,13 @@ import gsap from 'gsap';
 
 function Statement() {
   const container = useRef(null);
-  const strikeRef = useRef(null);
 
   useGSAP(() => {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: container.current,
         start: "top 80%",
+        toggleActions: "play none none none"
       }
     });
 
@@ -21,11 +21,11 @@ function Statement() {
       duration: 1,
       ease: "power3.out"
     })
-    .from(strikeRef.current, {
-      scaleX: 0,
-      duration: 0.8,
+    .to(".path-strike", {
+      strokeDashoffset: 0,
+      duration: 0.6,
       ease: "power2.inOut"
-    }, "-=0.4")
+    }, "-=0.5")
     .from(".statement-highlight", {
       scale: 0.95,
       opacity: 0,
@@ -45,18 +45,30 @@ function Statement() {
             {/* Strikethrough line */}
             <span className="relative text-[#042449]/50">
               bad thumbnail
-              <span
-                ref={strikeRef}
-                className="absolute left-[-2px] right-[-2px] top-[60%] -translate-y-1/2 h-[3px] md:h-[4px] rounded-full bg-[#FF4D4F] origin-left"
-                aria-hidden="true"
-              />
+              {/* Hand-drawn SVG Strikethrough */}
+              <svg 
+                className="absolute -left-2 -right-2 top-1/2 translate-y-[-40%] w-[calc(100%+16px)] h-[1em] text-[#FF4D4F] pointer-events-none" 
+                viewBox="0 0 100 100" 
+                preserveAspectRatio="none"
+              >
+                <path 
+                  className="path-strike"
+                  d="M 2,55 Q 30,40 60,55 T 98,45" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  strokeWidth="8" 
+                  strokeLinecap="round"
+                  pathLength="100"
+                  style={{ strokeDasharray: 100, strokeDashoffset: 100 }}
+                />
+              </svg>
             </span>
           </span>
           <span className="text-[#115199]">be the reason nobody watches it.</span>
         </p>
 
         {/* Highlighted Emphasis */}
-        <div className="statement-highlight inline-flex items-center px-4 md:px-6 py-2 md:py-3 rounded-xl md:rounded-2xl bg-gradient-to-b from-[#6EC2F3]/30 to-[#1C87FF]/30">
+        <div className="statement-highlight inline-flex items-center px-4 md:px-6 py-2 md:py-3 rounded-xl md:rounded-2xl bg-linear-to-b from-[#6EC2F3]/30 to-[#1C87FF]/30">
           <span className="text-[#1C87FF] text-3xl md:text-5xl font-semibold tracking-tight">
             We make sure they do.
           </span>
