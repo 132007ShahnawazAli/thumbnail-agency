@@ -114,7 +114,7 @@ function Hero() {
 
             {/* Hero Main Content */}
             <div className="hero-content relative z-10 flex flex-col items-center justify-center mt-80 md:mt-100 px-4 text-center gap-6">
-                <h1 className="text-[#F1F2F4] text-5xl md:text-7xl font-semibold tracking-tight leading-[1.1] max-w-5xl drop-shadow-lg">
+                <h1 className="text-[#F1F2F4] text-4xl md:text-7xl font-semibold tracking-tight leading-tight max-w-full md:max-w-5xl drop-shadow-lg">
                     We Make Thumbnails That <br className="hidden md:block" /> Make People Stop Scrolling
                 </h1>
                 <p className="text-[#F1F2F4]/90 text-base md:text-lg max-w-2xl leading-relaxed font-medium drop-shadow-md">

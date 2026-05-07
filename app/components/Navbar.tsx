@@ -93,7 +93,7 @@ export default function Navbar() {
             {/* Top Navbar - Visibility controlled container */}
             <div
                 ref={navRef}
-                className={`fixed md:absolute top-0 left-0 w-full z-9999 pointer-events-none pt-4 md:pt-6 px-4 ${isScrolled ? 'max-md:pt-0 max-md:px-0' : ''}`}
+                className={`fixed md:absolute top-0 left-0 w-full z-[9999] pointer-events-none pt-4 md:pt-6 px-4 ${isScrolled ? 'max-md:pt-0 max-md:px-0' : ''}`}
                 style={{
                     transform: visible ? 'translateY(0)' : 'translateY(-100%)',
                     transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.8s cubic-bezier(0.22, 1, 0.36, 1)',
@@ -197,7 +197,7 @@ export default function Navbar() {
 
             {/* Bottom PC Navbar (Shows after Hero) */}
             <div
-                className={`hidden md:flex fixed bottom-8 left-0 right-0 mx-auto w-fit z-9999 transition-all duration-500 ease-out`}
+                className={`hidden md:flex fixed bottom-8 left-0 right-0 mx-auto w-fit z-[9999] transition-all duration-500 ease-out`}
                 style={{
                     transform: isScrolledPastHero ? 'translateY(0)' : 'translateY(150%)',
                     opacity: isScrolledPastHero ? 1 : 0,
